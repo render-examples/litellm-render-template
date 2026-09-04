@@ -23,11 +23,16 @@ Deploy **LiteLLM**, the OpenAI-compatible LLM gateway, on Render with the offici
   <a href="https://docs.litellm.ai">
     <img src="https://img.shields.io/badge/Docs-docs.litellm.ai-0ea5e9" alt="Docs" />
   </a>
+  <a href="https://litellm-l9il.onrender.com/ui">
+    <img src="https://img.shields.io/badge/Demo-onrender.com-0ea5e9" alt="Live demo on Render" />
+  </a>
 </p>
 
 </div>
 
 ![LiteLLM Admin UI](./assets/hero.png)
+
+Live Admin UI: [litellm-l9il.onrender.com/ui](https://litellm-l9il.onrender.com/ui) (user `admin`, password is the master key). Chat playground against that proxy: [litellm-tester.onrender.com](https://litellm-tester.onrender.com).
 
 ## What This Template Shows
 
