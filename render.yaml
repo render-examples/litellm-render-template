@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://render.com/schema/render.yaml.json
+#
+# LiteLLM on Render: one-click gallery template
+# Template: https://github.com/render-examples/litellm-render-template
+# Upstream: https://github.com/BerriAI/litellm
+# Image: docker.io/litellm/litellm:v1.99.1
+#
+# Pattern: image-wrapper (official monolithic image with Prisma).
+# Matches the upstream docker-compose quickstart: one proxy + Postgres.
+# Redis is omitted on purpose: it is required only when you run more than
+# one instance. Models and provider keys are added in the Admin UI.
+# LiteLLM documents a 4 GiB memory floor; Pro is the plan floor here.
+
+previews:
+  generation: off
+
+projects:
+  - name: litellm-render-template
+    environments:
+      - name: production
+        services:
+          - type: web
+            name: litellm
+            runtime: image
+            plan: pro
+            region: oregon
+            image:
+              url: docker.io/litellm/litellm:v1.99.1
+            healthCheckPath: /health/liveliness
+            autoDeployTrigger: off
+            envVars:
+              - key: PORT
+                value: "4000"
+              - key: HOST
+                value: "0.0.0.0"
+              - key: NUM_WORKERS
+                value: "1"
+              - key: LITELLM_MODE
+                value: PRODUCTION
+              - key: LITELLM_LOG
+                value: ERROR
+              - key: STORE_MODEL_IN_DB
+                value: "True"
+              - key: DATABASE_URL
+                fromDatabase:
+                  name: litellm-db
+                  property: connectionString
+              # Must start with sk-. Generate: echo "sk-$(openssl rand -hex 24)"
+              - key: LITELLM_MASTER_KEY
+                sync: false
+              # Encrypts provider keys in Postgres. Set once; never rotate.
+              - key: LITELLM_SALT_KEY
+                sync: false
+              # Optional. Prefer adding provider keys in the Admin UI after login.
+              - key: OPENAI_API_KEY
+                sync: false
+
+        databases:
+          - name: litellm-db
+            databaseName: litellm
+            user: litellm
+            plan: basic-256mb
+            region: oregon
+            postgresMajorVersion: "16"
+            ipAllowList: []
